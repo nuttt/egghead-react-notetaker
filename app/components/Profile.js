@@ -1,33 +1,24 @@
-var React = require('react');
-var Router = require('react-router');
-var Firebase = require('firebase');
-var ReactFireMixin = require('reactfire');
-var helpers = require('../utils/helpers')
+import React from 'react';
+import Firebase from 'firebase';
+import ReactFireMixin from 'reactfire';
+import helpers from '../utils/helpers')
 
-var UserProfile = require('./Github/UserProfile');
-var Repos = require('./Github/Repos');
-var Notes = require('./Notes/Notes');
+import UserProfile from './Github/UserProfile';
+import Repos from './Github/Repos';
+import Notes from './Notes/Notes';
 
-var Profile = React.createClass({
+class Profile extends React.Component {
 
-  mixins: [Router.State, ReactFireMixin],
-
-  getInitialState: function() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       notes: [],
       bio: {},
       repos: []
-    }
-  },
+    };
+  }
 
-  handleAddNote: function(newNote) {
-    var newNotes = this.state.notes.concat([newNote]);
-    this.ref.child(this.getParams().username).set(newNotes);
-  },
-
-  init: function() {
-    var childRef = this.ref.child(this.getParams().username);
-    this.bindAsArray(childRef, 'notes');
+  init() {
 
     helpers.getGithubInfo(this.getParams().username)
       .then(function(dataObj){
@@ -36,23 +27,24 @@ var Profile = React.createClass({
           repos: dataObj.repos
         });
       }.bind(this));
-  },
+  }
 
-  componentDidMount: function() {
-    this.ref = new Firebase("https://nuttt-notetaker.firebaseio.com/");
+   handleAddNote(newNote) {
+    var newNotes = this.state.notes.concat([newNote]);
+  }
+
+  componentDidMount() {
     this.init();
-  },
+  }
 
-  componentWillUnmount: function() {
-    this.unbind('notes');
-  },
+  componentWillUnmount() {
+  }
 
-  componentWillReceiveProps: function() {
-    this.unbind('notes');
+  componentWillReceiveProps() {
     this.init();
-  },
+  }
 
-  render: function() {
+  render() {
 
     var username = this.getParams().username;
 
@@ -70,6 +62,10 @@ var Profile = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports = Profile;
+Profile.contextTypes = {
+  router: React.PropTypes.func.isRequired;
+}
+
+export default profile;

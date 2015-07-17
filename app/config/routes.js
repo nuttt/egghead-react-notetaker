@@ -1,13 +1,11 @@
-var React = require('react');
-var Main = require('../components/main');
-var Home = require('../components/home');
-var Profile = require('../components/profile');
-var Router = require('react-router');
+import React from 'react';
+import Main from '../components/main';
+import Home from '../components/home';
+import Profile from '../components/profile';
 
-var DefaultRoute = Router.DefaultRoute;
-var Route = Router.Route;
+import { Router, Route, DefaultRoute } from 'react-router'
 
-module.exports = (
+export default (
   <Route name="app" path="/" handler={Main}>
     <Route name="profile" path="profile/:username" handler={Profile} />
     <DefaultRoute handler={Home} />
